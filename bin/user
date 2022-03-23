@@ -16,6 +16,9 @@ echo "Edit user"
 echo "Suspend user"
 ;;
 "")
-echo "Argument is empty."
+echo "Argument is empty"
+;;
+*)
+echo "Argument not found"
 ;;
 esac
