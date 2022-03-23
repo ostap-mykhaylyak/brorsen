@@ -15,4 +15,4 @@ curl http://ostap.dev.com/install.sh | bash
 
 License
 ----------------------------
-Vesta is licensed under  [MIT](https://github.com/ostap-mykhaylyak/brorsen/blob/main/LICENSE) license
+is licensed under  [MIT](https://github.com/ostap-mykhaylyak/brorsen/blob/main/LICENSE) license
