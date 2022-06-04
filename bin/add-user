@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Argument definition
+user=$1
+password=$2
+
+# Adding user
+/usr/sbin/useradd -m "$user" -s /bin/bash
+
+# Adding password
+echo "$user:$password" | /usr/sbin/chpasswd
