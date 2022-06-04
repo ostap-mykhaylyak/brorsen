@@ -16,6 +16,9 @@ if [! -d "/home/$user" ]; then
 	mkdir /home/$user/sessions
 	chown $user:$user /home/$user/sessions
 	
+	mkdir /home/$user/logs
+	chown $user:$user /home/$user/logs
+	
 	mkdir /home/$user/conf
 	chown $user:$user /home/$user/conf
 else
