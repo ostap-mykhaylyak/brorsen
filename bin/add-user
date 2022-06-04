@@ -6,6 +6,18 @@ password=$2
 if [! -d "/home/$user" ]; then
 	/usr/sbin/useradd -m "$user" -s /bin/bash
 	echo "$user:$password" | /usr/sbin/chpasswd
+	
+	mkdir /home/$user/public_html
+	chown $user:$user /home/$user/public_html
+	
+	mkdir /home/$user/tmp
+	chown $user:$user /home/$user/tmp
+	
+	mkdir /home/$user/sessions
+	chown $user:$user /home/$user/sessions
+	
+	mkdir /home/$user/conf
+	chown $user:$user /home/$user/conf
 else
 	echo "Error: ${user} exist. Can not continue."
 	exit 1
