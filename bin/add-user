@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Argument definition
 user=$1
 password=$2
 
