@@ -109,7 +109,7 @@ EOL
 
 cat > /etc/exim4/update-exim4.conf.conf <<EOL
 dc_eximconfig_configtype='internet'
-dc_other_hostnames='$HOSTNAME'
+dc_other_hostnames='$(hostname -f)'
 dc_local_interfaces=''
 dc_readhost=''
 dc_relay_domains=''
