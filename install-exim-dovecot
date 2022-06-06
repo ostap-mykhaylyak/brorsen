@@ -1,0 +1,124 @@
+#!/bin/bash
+
+whoami=$(whoami)
+if [ "$whoami" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
+if [! -d "/etc/exim4" ]; then
+	apt install -y exim4-daemon-heavy
+fi
+
+if [! -d "/etc/dovecot" ]; then
+	apt install -y dovecot-core dovecot-pop3d dovecot-imapd
+fi
+
+cat >/etc/exim4/conf.d/main/00_local_settings <<EOL
+daemon_smtp_ports = 25 : 465 : 587
+EOL
+
+cat >/etc/dovecot/conf.d/10-auth.conf <<EOL
+auth_mechanisms = plain
+!include auth-system.conf.ext
+!include auth-passwdfile.conf.ext
+EOL
+
+cat >/etc/dovecot/conf.d/10-mail.conf <<EOL
+mail_location = maildir:%h/mail/%d/%n
+namespace inbox {
+  inbox = yes
+}
+mail_privileged_group = mail
+protocol !indexer-worker {
+}
+EOL
+
+cat >/etc/dovecot/conf.d/10-master.conf <<EOL
+service imap-login {
+  inet_listener imap {
+  }
+  inet_listener imaps {
+  }
+}
+service pop3-login {
+  inet_listener pop3 {
+  }
+  inet_listener pop3s {
+  }
+}
+service lmtp {
+  unix_listener lmtp {
+  }
+}
+service imap {
+}
+service pop3 {
+}
+service auth {
+  unix_listener auth-userdb {
+  }
+  
+  unix_listener auth-client {
+  group = mail
+  mode = 0660
+  user = Debian-exim
+  }
+  
+  user = dovecot
+}
+service auth-worker {
+}
+service dict {
+  unix_listener dict {
+  }
+}
+EOL
+
+cat >/etc/dovecot/conf.d/10-ssl.conf <<EOL
+disable_plaintext_auth = no
+ssl = yes
+ssl_cert = </etc/dovecot/private/dovecot.pem
+ssl_key = </etc/dovecot/private/dovecot.key
+ssl_client_ca_dir = /etc/ssl/certs
+EOL
+
+cat >/etc/exim4/conf.d/auth/15_dovecot <<EOL
+dovecot_login:
+  driver = dovecot
+  public_name = LOGIN
+  server_socket = /run/dovecot/auth-client
+  server_set_id = \$auth1
+dovecot_plain:
+  driver = dovecot
+  public_name = PLAIN
+  server_socket = /run/dovecot/auth-client
+  server_set_id = \$auth1
+EOL
+
+cat >/etc/dovecot/conf.d/auth-passwdfile.conf.ext <<EOL
+passdb {
+  driver = passwd-file
+  args = scheme=CRYPT username_format=%n /etc/exim4/domains/%d/passwd
+}
+userdb {
+  driver = passwd-file
+  args = username_format=%n /etc/exim4/domains/%d/passwd
+}
+EOL
+
+cat >/etc/exim4/update-exim4.conf.conf <<EOL
+dc_eximconfig_configtype='internet'
+dc_other_hostnames='$HOSTNAME'
+dc_local_interfaces=''
+dc_readhost=''
+dc_relay_domains=''
+dc_minimaldns='false'
+dc_relay_nets=''
+dc_smarthost=''
+CFILEMODE='644'
+dc_use_split_config='true'
+dc_hide_mailname=''
+dc_mailname_in_oh='true'
+dc_localdelivery='maildir_home'
+EOL

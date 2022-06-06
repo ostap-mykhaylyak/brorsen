@@ -1,0 +1,20 @@
+#!/bin/bash
+
+whoami=$(whoami)
+if [ "$whoami" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
+if [! -d "/etc/nginx" ]; then
+	LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/nginx-mainline
+fi
+
+if [! -d "/etc/php/8.0" ]; then
+	LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+fi
+
+if [ ! -f "/usr/local/bin/wp" ]; then
+    wget -nv https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O /usr/local/bin/wp
+    chmod +x /usr/local/bin/wp
+fi
