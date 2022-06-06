@@ -1,0 +1,16 @@
+#!/bin/bash
+
+whoami=$(whoami)
+if [ "$whoami" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
+if [ ! -d "/etc/mysql" ]; then
+	curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=10.6
+	apt install -y mariadb-server mariadb-client
+fi
+
+echo "Remember !!! MariaDB socket auth press 'n'"
+
+mariadb-secure-installation
