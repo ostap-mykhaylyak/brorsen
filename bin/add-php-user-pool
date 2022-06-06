@@ -3,6 +3,8 @@
 user=$1
 php_ver=$2
 
+rm /etc/php/*/fpm/pool.d/$user.conf
+
 if [! -f "/etc/php/$php_ver/fpm/pool.d/$user.conf" ]; then
 	cat > /etc/php/$php_ver/fpm/pool.d/$user.conf <<EOL
 [${user}]
