@@ -3,6 +3,8 @@
 user=$1
 domain=$2
 ip=$3
+php_ver=$4
+
 
 if [! -f "/home/$user/conf/$domain.nginx.ssl.conf" ]; then
 	cat > /home/$user/conf/$domain.nginx.ssl.conf <<EOL
@@ -59,5 +61,38 @@ server {
 EOL
 else
 	echo "Error: ${domain} exist. Can not continue."
+	exit 1
+fi
+
+rm /etc/php/*/fpm/pool.d/$user.conf
+
+if [! -f "/etc/php/$php_ver/fpm/pool.d/$user.conf" ]; then
+	cat > /etc/php/$php_ver/fpm/pool.d/$user.conf <<EOL
+[${user}]
+listen = /var/run/php/${user}.sock
+listen.allowed_clients = 127.0.0.1
+
+user = ${user}
+group = ${user}
+
+listen.owner = ${user}
+listen.group = www-data
+
+pm = ondemand
+pm.max_children = 4
+pm.max_requests = 4000
+pm.process_idle_timeout = 10s
+
+php_admin_value[upload_tmp_dir] = /home/${user}/tmp
+php_admin_value[session.save_path] = /home/${user}/sessions
+
+env[HOSTNAME] = $HOSTNAME
+env[PATH] = /usr/local/bin:/usr/bin:/bin
+env[TMP] = /home/${user}/tmp
+env[TMPDIR] = /home/${user}/tmp
+env[TEMP] = /home/${user}/tmp
+EOL
+else
+	echo "Error: ${user} exist. Can not continue."
 	exit 1
 fi
