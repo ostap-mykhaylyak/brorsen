@@ -6,8 +6,8 @@ ip=$3
 php_ver=$4
 
 
-if [! -f "/home/$user/conf/$domain.nginx.ssl.conf" ]; then
-	cat > /home/$user/conf/$domain.nginx.ssl.conf <<EOL
+if [! -f "/home/$user/conf/$domain.ssl.conf" ]; then
+	cat > /home/$user/conf/$domain.ssl.conf <<EOL
 server {
     listen      ${ip}:443 ssl http2;
     server_name ${domain} www.${domain};
@@ -39,11 +39,11 @@ server {
             expires     max;
         }
 
-        try_files $uri $uri/ /index.php?$args;
+        try_files \$uri \$uri/ /index.php?\$args;
 
         location ~ [^/]\.php(/|$) {
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            if (!-f $document_root$fastcgi_script_name) {
+            fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+            if (!-f \$document_root\$fastcgi_script_name) {
                 return  404;
             }
 
