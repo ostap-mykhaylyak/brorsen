@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# https://ixnfo.com/en/installing-and-using-ipset.html
+# https://confluence.jaytaala.com/display/TKB/Using+ipset+to+block+IP+addresses+-+firewall
+# https://www.ccnahub.com/linux/building-public-and-private-ipset-blacklists/
+# https://gist.github.com/eusonlito/2919bd89b870343bff93b7c9f476579c

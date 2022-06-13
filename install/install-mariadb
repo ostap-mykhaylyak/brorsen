@@ -8,6 +8,11 @@ fi
 
 if [ ! -d "/etc/mysql" ]; then
 	curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=10.6
+	
+	export DEBIAN_FRONTEND="noninteractive"
+	debconf-set-selections <<< "mariadb-server mysql-server/root_password password $PASSWORD"
+	debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $PASSWORD"
+	
 	apt install -y mariadb-server mariadb-client
 fi
 
