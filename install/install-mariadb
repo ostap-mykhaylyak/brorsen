@@ -6,7 +6,14 @@ if [ "$whoami" != "root" ]; then
     exit 1
 fi
 
-PASSWORD="$(openssl rand -base64 12)"
+PASSWORD=`cat /dev/urandom | tr -dc 'a-zA-Z0-9-_!@#$%^&*()_+{}|:<>?=' | fold -w 18 | head -n 1`
+
+
+cat <<EOF > $HOME/.my.cnf
+[mysql]
+user=root
+password=$PASSWORD
+EOF
 
 if [ ! -d "/etc/mysql" ]; then
 	curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=10.6
