@@ -1,5 +1,11 @@
 #!/bin/bash
 
+whoami=$(whoami)
+if [ "$whoami" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
 USER_NAME=$1
 PASSWDDB=$2
 
