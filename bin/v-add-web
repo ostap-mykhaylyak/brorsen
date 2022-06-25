@@ -7,7 +7,7 @@ php_ver=$4
 
 
 if [ ! -f "/home/$user/conf/$domain.ssl.conf" ]; then
-	cat > /home/$user/conf/$domain.ssl.conf <<EOL
+cat > /home/$user/conf/$domain.ssl.conf <<EOL
 server {
     listen      ${ip}:443 ssl http2;
     server_name ${domain} www.${domain};
