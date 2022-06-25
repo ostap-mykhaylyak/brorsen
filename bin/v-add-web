@@ -6,7 +6,7 @@ ip=$3
 php_ver=$4
 
 
-if [! -f "/home/$user/conf/$domain.ssl.conf" ]; then
+if [ ! -f "/home/$user/conf/$domain.ssl.conf" ]; then
 	cat > /home/$user/conf/$domain.ssl.conf <<EOL
 server {
     listen      ${ip}:443 ssl http2;
@@ -66,8 +66,8 @@ fi
 
 rm /etc/php/*/fpm/pool.d/$user.conf
 
-if [! -f "/etc/php/$php_ver/fpm/pool.d/$user.conf" ]; then
-	cat > /etc/php/$php_ver/fpm/pool.d/$user.conf <<EOL
+if [ ! -f "/etc/php/$php_ver/fpm/pool.d/$user.conf" ]; then
+cat > /etc/php/$php_ver/fpm/pool.d/$user.conf <<EOL
 [${user}]
 listen = /var/run/php/${user}.sock
 listen.allowed_clients = 127.0.0.1
