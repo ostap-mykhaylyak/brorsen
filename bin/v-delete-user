@@ -2,7 +2,7 @@
 
 user=$1
 
-if [! -d "/home/$user" ]; then
+if [ ! -d "/home/$user" ]; then
 	# Deleting system user
 	/usr/sbin/userdel -f $user >> /dev/null 2>&1
 	if [ $? -ne 0 ]; then
