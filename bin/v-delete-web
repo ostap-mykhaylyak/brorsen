@@ -1,0 +1,104 @@
+#!/bin/bash
+
+whoami=$(whoami)
+if [ "$whoami" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
+user=$1
+domain=$2
+ip=$3
+php_ver=$4
+
+
+if [ ! -f "/home/$user/conf/$domain.ssl.conf" ]; then
+cat > /home/$user/conf/$domain.ssl.conf <<EOL
+server {
+    listen      ${ip}:443 ssl http2;
+    server_name ${domain} www.${domain};
+	
+    root        /home/${user}/public_html;
+    index       index.php index.html index.htm;
+	
+    access_log  /home/${user}/logs/${domain}.log combined;
+    access_log  /home/${user}/logs/${domain}.bytes bytes;
+    error_log   /home/${user}/logs/${domain}.error.log error;
+
+    ssl_certificate      /home/${user}/conf/ssl.${domain}.pem;
+    ssl_certificate_key  /home/${user}/conf/ssl.${domain}.key;
+
+    location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+        }
+
+    location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+        }
+
+    location / {
+
+        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+            expires     max;
+        }
+
+        try_files \$uri \$uri/ /index.php?\$args;
+
+        location ~ [^/]\.php(/|$) {
+            fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+            if (!-f \$document_root\$fastcgi_script_name) {
+                return  404;
+            }
+
+            fastcgi_pass    unix:/var/run/php/${user}.sock;
+            fastcgi_index   index.php;
+            include         /etc/nginx/fastcgi_params;
+        }
+    }
+
+    location ~* "/\.(htaccess|htpasswd)$" {
+        deny    all;
+        return  404;
+    }
+}
+EOL
+else
+	echo "Error: ${domain} exist. Can not continue."
+	exit 1
+fi
+
+rm /etc/php/*/fpm/pool.d/$user.conf
+
+if [ ! -f "/etc/php/$php_ver/fpm/pool.d/$user.conf" ]; then
+cat > /etc/php/$php_ver/fpm/pool.d/$user.conf <<EOL
+[${user}]
+listen = /var/run/php/${user}.sock
+listen.allowed_clients = 127.0.0.1
+
+user = ${user}
+group = ${user}
+
+listen.owner = ${user}
+listen.group = www-data
+
+pm = ondemand
+pm.max_children = 4
+pm.max_requests = 4000
+pm.process_idle_timeout = 10s
+
+php_admin_value[upload_tmp_dir] = /home/${user}/tmp
+php_admin_value[session.save_path] = /home/${user}/sessions
+
+env[HOSTNAME] = $HOSTNAME
+env[PATH] = /usr/local/bin:/usr/bin:/bin
+env[TMP] = /home/${user}/tmp
+env[TMPDIR] = /home/${user}/tmp
+env[TEMP] = /home/${user}/tmp
+EOL
+else
+	echo "Error: ${user} exist. Can not continue."
+	exit 1
+fi

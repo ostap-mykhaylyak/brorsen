@@ -1,0 +1,36 @@
+#!/bin/bash
+
+whoami=$(whoami)
+if [ "$whoami" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
+user=$1
+domain=$2
+account=$3
+password=$4
+quota=$5
+
+hash="$(printf '$password\n$password\n' | doveadm pw)"
+
+mkdir -p /etc/exim4/domains
+mkdir -p /home/$user/conf/mail/$domain
+mkdir -p /home/$user/mail/$domain
+touch /home/$user/conf/mail/$domain/aliases
+touch /home/$user/conf/mail/$domain/passwd
+touch /home/$user/conf/mail/$domain/fwd_only
+
+ln -s /home/$user/conf/mail/$domain/ /etc/exim4/domains/$domain
+
+chmod 771 /home/$user/conf/mail/$domain
+chmod 660 /home/$user/conf/mail/$domain/*
+chmod 771 /etc/exim4/domains/$domain
+chmod 770 /home/$user/mail/$domain
+
+chown -R $MAIL_USER:mail /home/$user/conf/mail/$domain
+chown -R dovecot:mail /home/$user/conf/mail/$domain/passwd
+chown $user:mail /home/$user/mail/$domain
+
+str="$account:$hash:$user:mail::/home/$user:$quota"
+echo $str >> /home/$user/conf/mail/$domain/passwd
