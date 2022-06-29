@@ -15,6 +15,8 @@ if [ ! -d "/home/$user" ]; then
 	/usr/sbin/useradd -m "$user" -s /bin/bash
 	echo "$user:$password" | /usr/sbin/chpasswd
 	
+	usermod -a -G "$user" www-data
+	
 	mkdir /home/$user/public_html
 	chown $user:$user /home/$user/public_html
 	
