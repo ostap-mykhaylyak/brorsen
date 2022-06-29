@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # https://askubuntu.com/questions/46501/why-can-other-users-see-the-files-in-my-home-folder
+# https://www.getpagespeed.com/server-setup/nginx-and-php-fpm-what-my-permissions-should-be
 
 whoami=$(whoami)
 if [ "$whoami" != "root" ]; then
