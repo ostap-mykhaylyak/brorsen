@@ -22,7 +22,7 @@ server {
     index       index.php index.html index.htm;
 	
     access_log  /home/${user}/logs/${domain}.log combined;
-    access_log  /home/${user}/logs/${domain}.bytes bytes;
+    # access_log  /home/${user}/logs/${domain}.bytes bytes;
     error_log   /home/${user}/logs/${domain}.error.log error;
 
     ssl_certificate      /home/${user}/conf/ssl.${domain}.pem;
