@@ -81,8 +81,8 @@ listen.allowed_clients = 127.0.0.1
 user = ${user}
 group = ${user}
 
-listen.owner = www-data
-listen.group = www-data
+listen.owner = ${user}
+listen.group = ${user}
 
 pm = ondemand
 pm.max_children = 4
