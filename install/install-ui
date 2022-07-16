@@ -1,0 +1,9 @@
+#!/bin/bash
+
+whoami=$(whoami)
+if [ "$whoami" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
+echo "seravent ALL=NOPASSWD:/usr/local/brorsen/*" >> /etc/sudoers.d/seravent
