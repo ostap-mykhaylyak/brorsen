@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# <?php
+# password_verify('123456', '$6$0e7d3217f1df9e8d$sIrNt9Q1t/lVOy/QKfMFpp.0Qyod0v59Jb7BG6mQ4tMtji7B/f9CaOD6JOuY9ftXt566F7/UG6JRG3wPRYUhP1')
+
 whoami=$(whoami)
 if [ "$whoami" != "root" ]; then
     echo "You must be root to execute this script"
