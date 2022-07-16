@@ -11,7 +11,7 @@ fi
 
 user=$1
 
-if [ ! -d "/home/$user" ]; then
+if [ -d "/home/$user" ]; then
 
 	echo $(grep ${user} /etc/shadow | awk -F ":" '{ print $2 }')
 
