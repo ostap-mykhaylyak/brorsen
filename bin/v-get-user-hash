@@ -13,7 +13,7 @@ user=$1
 
 if [ ! -d "/home/$user" ]; then
 
-	echo $(grep root /etc/shadow | awk -F ":" '{ print $2 }')
+	echo $(grep ${user} /etc/shadow | awk -F ":" '{ print $2 }')
 
 else
 	echo "Error: ${user} exist. Can not continue."
