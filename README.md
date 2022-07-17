@@ -13,6 +13,11 @@ Clone GitHub repo:
 git clone https://github.com/ostap-mykhaylyak/brorsen --depth 1 --branch=main /usr/local/brorsen
 ```
 
+Update files:
+```bash
+git pull origin main
+```
+
 License
 ----------------------------
 is licensed under  [MIT](https://github.com/ostap-mykhaylyak/brorsen/blob/main/LICENSE) license
