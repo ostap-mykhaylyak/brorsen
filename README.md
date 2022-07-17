@@ -8,9 +8,9 @@ Connect to your server as root via SSH
 ssh root@your.server
 ```
 
-Download the installation script, and run it:
+Clone GitHub repo:
 ```bash
-curl http://ostap.dev.com/install.sh | bash
+git clone https://github.com/ostap-mykhaylyak/brorsen --depth 1 --branch=main /usr/local/brorsen
 ```
 
 License
