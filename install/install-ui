@@ -6,4 +6,6 @@ if [ "$whoami" != "root" ]; then
     exit 1
 fi
 
-echo "seravent ALL=NOPASSWD:/usr/local/brorsen/*" >> /etc/sudoers.d/seravent
+useradd -r brorsen
+
+echo "brorsen ALL=NOPASSWD:/usr/local/brorsen/*" >> /etc/sudoers.d/brorsen
