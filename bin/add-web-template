@@ -9,7 +9,7 @@ user=$1
 domain=$2
 ip=$3
 
-template="/usr/local/brorsen/template/nginx-vhost"
+template="/usr/local/brorsen/template/nginx/vhost"
 output="/home/${user}/conf/nginx/${domain}.conf"
 
 if [[ -f $output ]]; then
