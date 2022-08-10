@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ "$(whoami)" != "root" ]; then
+	echo "You must be root to execute this script"
+	exit 1
+fi
+
+user=$1
+domain=$2
+ip=$3
+
+template="/usr/local/brorsen/template/nginx-vhost"
+output="/home/${user}/conf/nginx/${domain}.conf"
+
+if [[ -f $output ]]; then
+	rm $output
+fi
+
+IFS=''
+
+while read line; do
+	echo $line |
+	sed "s|DOMAIN|${domain}|g" |
+	sed "s|IP|${ip}|g" |
+	sed "s|USER|${user}|g" >> $output
+done < $template
