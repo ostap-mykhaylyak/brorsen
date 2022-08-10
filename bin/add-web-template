@@ -22,3 +22,8 @@ while IFS= read line; do
 	sed "s|IP|${ip}|g" |
 	sed "s|USER|${user}|g" >> $output
 done < $template
+
+/usr/sbin/nginx -t 2>/dev/null > /dev/null
+if [[ $? == 0 ]]; then
+	/etc/init.d/nginx reload
+fi
