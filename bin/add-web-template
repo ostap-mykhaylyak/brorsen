@@ -7,7 +7,6 @@ fi
 
 user=$1
 domain=$2
-ip=$3
 
 template="/usr/local/brorsen/template/nginx/vhost"
 output="/home/${user}/conf/nginx/${domain}.conf"
@@ -19,7 +18,6 @@ fi
 while IFS= read line; do
 	echo "${line}" |
 	sed "s|DOMAIN|${domain}|g" |
-	sed "s|IP|${ip}|g" |
 	sed "s|USER|${user}|g" >> $output
 done < $template
 
