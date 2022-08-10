@@ -23,6 +23,11 @@ while IFS= read line; do
 	sed "s|USER|${user}|g" >> $output
 done < $template
 
+openssl req -new -x509 -days 365 -nodes \
+  -out /home/$user/conf/ssl/$domain.crt \
+  -keyout /home/$user/conf/ssl/$domain.key \
+  -subj "/C=SK/ST=Bratislava/L=Bratislava/O=IT/CN=*.${domain}"
+
 /usr/sbin/nginx -t 2>/dev/null > /dev/null
 if [[ $? == 0 ]]; then
 	/etc/init.d/nginx reload
