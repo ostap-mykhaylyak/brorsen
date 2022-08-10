@@ -17,7 +17,7 @@ if [[ -f $output ]]; then
 fi
 
 while IFS= read line; do
-	echo $line |
+	echo "$line" |
 	sed "s|DOMAIN|${domain}|g" |
 	sed "s|IP|${ip}|g" |
 	sed "s|USER|${user}|g" >> $output
