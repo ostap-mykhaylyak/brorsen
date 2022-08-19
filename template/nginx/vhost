@@ -1,0 +1,51 @@
+server {
+    listen              80;
+    listen              [::]:80;
+    server_name         DOMAIN www.DOMAIN;
+    root                /home/USER/public_html;
+
+    # logging
+    access_log          /home/USER/logs/access.log;
+    error_log           /home/USER/logs/error.log error;
+
+    index               index.html index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php-USER.sock;
+        fastcgi_index index.php;
+		include fastcgi.conf;
+    }
+}
+
+server {
+    listen              443 ssl http2;
+    listen              [::]:443 ssl http2;
+    server_name         DOMAIN www.DOMAIN;
+    root                /home/USER/public_html;
+
+    # SSL
+    ssl_certificate     /home/USER/conf/ssl/DOMAIN.crt;
+    ssl_certificate_key /home/USER/conf/ssl/DOMAIN.key;
+
+    # logging
+    access_log          /home/USER/logs/access.log;
+    error_log           /home/USER/logs/error.log error;
+
+    index               index.html index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php-USER.sock;
+        fastcgi_index index.php;
+		include fastcgi.conf;
+    }
+}
