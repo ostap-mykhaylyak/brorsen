@@ -8,6 +8,11 @@ fi
 user=$1
 domain=$2
 
+if [ ! -d "/home/$user" ]; then
+	echo "Error: User ${user} does not exist."
+	exit 1
+fi
+
 template="/usr/local/brorsen/template/nginx/vhost"
 output="/home/${user}/conf/nginx/${domain}.conf"
 
@@ -15,9 +20,13 @@ if [[ -f $output ]]; then
 	rm $output
 fi
 
+if [ ! -d "/home/$user/conf/nginx" ]; then
+	mkdir /home/$user/conf/nginx
+fi
+
 if [ ! -d "/home/$user/public_html" ]; then
-	echo "Check user or public_html"
-	exit 1
+	mkdir /home/$user/public_html
+	chown $user:$user /home/$user/public_html
 fi
 
 while IFS= read line; do
@@ -25,6 +34,16 @@ while IFS= read line; do
 	sed "s|DOMAIN|${domain}|g" |
 	sed "s|USER|${user}|g" >> $output
 done < $template
+
+if [[ -L "/etc/nginx/sites-enabled/$domain.conf" ]]; then
+	echo "Symlink already exist."
+else
+	ln -s /home/$user/conf/nginx/$domain.conf /etc/nginx/sites-enabled/$domain.conf
+fi
+
+if [ ! -d "/home/$user/conf/ssl" ]; then
+	mkdir /home/$user/conf/ssl
+fi
 
 openssl req -new -x509 -days 365 -nodes \
   -out /home/$user/conf/ssl/$domain.crt \
@@ -36,4 +55,5 @@ if [[ $? == 0 ]]; then
 	/etc/init.d/nginx reload
 else
 	echo "Please check NGINX config."
+	exit 1
 fi

@@ -3,14 +3,12 @@
 # https://askubuntu.com/questions/46501/why-can-other-users-see-the-files-in-my-home-folder
 # https://www.getpagespeed.com/server-setup/nginx-and-php-fpm-what-my-permissions-should-be
 
-whoami=$(whoami)
-if [ "$whoami" != "root" ]; then
-    echo "You must be root to execute this script"
-    exit 1
+if [ "$(whoami)" != "root" ]; then
+	echo "You must be root to execute this script."
+	exit 1
 fi
 
 user=$1
-password=$2
 
 if [ ! -d "/home/$user" ]; then
 	/usr/sbin/useradd -m "$user" -s /bin/bash
@@ -33,6 +31,6 @@ if [ ! -d "/home/$user" ]; then
 	mkdir /home/$user/conf
 	# chown $user:$user /home/$user/conf
 else
-	echo "Error: ${user} exist. Can not continue."
+	echo "Error: User ${user} already exist."
 	exit 1
 fi

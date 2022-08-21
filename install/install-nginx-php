@@ -1,9 +1,8 @@
 #!/bin/bash
 
-whoami=$(whoami)
-if [ "$whoami" != "root" ]; then
-    echo "You must be root to execute this script"
-    exit 1
+if [ "$(whoami)" != "root" ]; then
+	echo "You must be root to execute this script."
+	exit 1
 fi
 
 if [ ! -d "/etc/nginx" ]; then
@@ -24,6 +23,10 @@ fi
 
 if [ ! -d "/etc/php/8.1" ]; then
 	apt install -y php8.1-{fpm,mysql,cli,common,imap,ldap,xml,curl,mbstring,zip,xmlrpc,soap,gd,intl,mcrypt,opcache,readline,imagick,bcmath}
+fi
+
+if [ ! -d "/etc/php/8.2" ]; then
+	apt install -y php8.2-{fpm,mysql,cli,common,imap,ldap,xml,curl,mbstring,zip,xmlrpc,soap,gd,intl,mcrypt,opcache,readline,imagick,bcmath}
 fi
 
 update-alternatives --set php /usr/bin/php8.0

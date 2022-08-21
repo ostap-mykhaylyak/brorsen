@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# https://unix.stackexchange.com/questions/398891/change-shadow-password
+# https://sleeplessbeastie.eu/2018/04/09/how-to-securely-change-user-password-using-shell-script/
+
+
 if [ "$(whoami)" != "root" ]; then
 	echo "You must be root to execute this script."
 	exit 1
