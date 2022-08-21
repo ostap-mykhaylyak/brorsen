@@ -30,7 +30,7 @@ server {
 
 	# SSL
 	ssl_certificate		/home/USER/conf/ssl/DOMAIN.crt;
-	ssl_certificate_key /home/USER/conf/ssl/DOMAIN.key;
+	ssl_certificate_key	/home/USER/conf/ssl/DOMAIN.key;
 
 	# logging
 	access_log			/home/USER/logs/access.log;
