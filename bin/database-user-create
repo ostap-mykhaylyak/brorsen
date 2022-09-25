@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ "$(whoami)" != "root" ]; then
+    echo "You must be root to execute this script"
+    exit 1
+fi
+
+USER_NAME=$1
+PASSWDDB=$2
+
+# replace "-" with "_" for database username
+USER_NAME=${USER_NAME//[^a-zA-Z0-9]/_}
+
+if [ -f /root/.my.cnf ]; then
+    mysql -e "CREATE USER ${USER_NAME}@localhost IDENTIFIED BY '${PASSWDDB}';"
+    mysql -e "FLUSH PRIVILEGES;"
+else
+    echo "Please enter root user MySQL password!"
+    echo "Note: password will be hidden when typing"
+    read -sp rootpasswd
+    mysql -uroot -p${rootpasswd} -e "CREATE USER ${USER_NAME}@localhost IDENTIFIED BY '${PASSWDDB}';"
+    mysql -uroot -p${rootpasswd} -e "FLUSH PRIVILEGES;"
+fi

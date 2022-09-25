@@ -6,7 +6,7 @@ if [ "$whoami" != "root" ]; then
     exit 1
 fi
 
-PASSWORD=`cat /dev/urandom | tr -dc 'a-zA-Z0-9-_!@#$%^&*()_+{}|:<>?=' | fold -w 18 | head -n 1`
+PASSWORD=`cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 12 | head -n 1`
 
 
 cat <<EOF > $HOME/.my.cnf
@@ -17,11 +17,11 @@ EOF
 
 if [ ! -d "/etc/mysql" ]; then
 	curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=10.6
-	
+
 	export DEBIAN_FRONTEND="noninteractive"
 	debconf-set-selections <<< "mariadb-server mysql-server/root_password password $PASSWORD"
 	debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $PASSWORD"
-	
+
 	apt install -y mariadb-server mariadb-client
 fi
 

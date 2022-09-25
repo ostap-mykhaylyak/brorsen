@@ -4,8 +4,8 @@
 # https://www.getpagespeed.com/server-setup/nginx-and-php-fpm-what-my-permissions-should-be
 
 if [ "$(whoami)" != "root" ]; then
-        echo "You must be root to execute this script."
-        exit 1
+	echo "You must be root to execute this script."
+	exit 1
 fi
 
 user=$1
@@ -13,22 +13,22 @@ user=$1
 [ $# -eq 0 ] && { echo "Usage: $0 username"; exit 1; }
 
 if [ ! -d "/home/$user" ]; then
-        /usr/sbin/useradd -m "$user" -s /bin/bash
+	/usr/sbin/useradd -m "$user" -s /bin/bash
 
-        usermod -a -G "$user" www-data
+	usermod -a -G "$user" www-data
 
-        mkdir /home/$user/public_html
-        chown $user:$user /home/$user/public_html
+	mkdir /home/$user/public_html
+	chown $user:$user /home/$user/public_html
 
-        mkdir /home/$user/tmp
-        chown $user:$user /home/$user/tmp
+	mkdir /home/$user/tmp
+	chown $user:$user /home/$user/tmp
 
-        mkdir /home/$user/sessions
-        chown $user:$user /home/$user/sessions
+	mkdir /home/$user/sessions
+	chown $user:$user /home/$user/sessions
 
-        mkdir /home/$user/logs
-        mkdir /home/$user/conf
+	mkdir /home/$user/logs
+	mkdir /home/$user/conf
 else
-        echo "Error: User ${user} already exist."
-        exit 1
+	echo "Error: User ${user} already exist."
+	exit 1
 fi
