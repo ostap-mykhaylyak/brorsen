@@ -1,13 +1,15 @@
 #!/bin/bash
 
-whoami=$(whoami)
-if [ "$whoami" != "root" ]; then
-    echo "You must be root to execute this script"
-    exit 1
+if [ "$(whoami)" != "root" ]; then
+	echo "You must be root to execute this script."
+	exit 1
 fi
 
 USER_NAME=$1
 PASSWDDB=$2
+
+[ $# -eq 0 ] && { echo "Usage: $0 username password"; exit 1; }
+
 
 # replace "-" with "_" for database username
 MAINDB=${USER_NAME//[^a-zA-Z0-9]/_}
