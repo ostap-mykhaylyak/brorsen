@@ -10,7 +10,6 @@ PASSWDDB=$2
 
 [ $# -eq 0 ] && { echo "Usage: $0 username password"; exit 1; }
 
-
 # replace "-" with "_" for database username
 MAINDB=${USER_NAME//[^a-zA-Z0-9]/_}
 
