@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ "$(whoami)" != "root" ]; then
+        echo "You must be root to execute this script."
+        exit 1
+fi
+
+domain=$1
+
+[ $# -eq 0 ] && { echo "Usage: $0 domain"; exit 1; }
+
+if [ ! -d "/home/$user" ]; then
+        echo "Error: User ${user} does not exist."
+        exit 1
+fi
+
+certbot --nginx -d $domain -d www.$domain --non-interactive --agree-tos --register-unsafely-without-email

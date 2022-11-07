@@ -1,0 +1,47 @@
+#!/bin/bash
+
+if [ "$(whoami)" != "root" ]; then
+	echo "You must be root to execute this script."
+	exit 1
+fi
+
+user=$1
+domain=$2
+
+[ $# -eq 0 ] && { echo "Usage: $0 user domain"; exit 1; }
+
+if [ ! -d "/home/$user" ]; then
+	echo "Error: User ${user} does not exist."
+	exit 1
+fi
+
+template="/usr/local/brorsen/template/knot/zone"
+output="/home/${user}/conf/knot/${domain}.zone"
+
+if [[ -f $output ]]; then
+	rm $output
+fi
+
+if [ ! -d "/home/$user/conf/knot" ]; then
+	mkdir /home/$user/conf/knot
+fi
+
+while IFS= read line; do
+	echo "${line}" |
+	sed "s|DOMAIN|${domain}|g" |
+	sed "s|USER|${user}|g" >> $output
+done < $template
+
+if [[ -L "/var/lib/knot/$domain.zone" ]]; then
+	echo "Symlink already exist."
+else
+	ln -s /home/$user/conf/knot/$domain.zone /var/lib/knot/$domain.zone
+fi
+
+/usr/sbin/knotc conf-check 2>/dev/null > /dev/null
+if [[ $? == 0 ]]; then
+	/usr/sbin/knotc reload
+else
+	echo "Please check Knot config."
+	exit 1
+fi
