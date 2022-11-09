@@ -23,7 +23,7 @@ else
 fi
 
 if mysql -e 'use ${database}'; then
-	echo "A database already exists."
+	echo "Error: Database already exists."
     exit 1
 fi
 
