@@ -22,6 +22,11 @@ else
 	source /home/$user/.my.cnf
 fi
 
+if mysql -e 'use ${database}'; then
+	echo "A database already exists."
+    exit 1
+fi
+
 if [ -f /root/.my.cnf ]; then
     mysql -e "CREATE DATABASE ${database} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
 	mysql -e "CREATE USER ${user}@'%' IDENTIFIED BY '${password}';"
