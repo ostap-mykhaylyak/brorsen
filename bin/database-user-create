@@ -5,19 +5,26 @@ if [ "$(whoami)" != "root" ]; then
     exit 1
 fi
 
-USER_NAME=$1
-PASSWDDB=$2
+[ $# -eq 0 ] && { echo "Usage: $0 user"; exit 1; }
 
-# replace "-" with "_" for database username
-USER_NAME=${USER_NAME//[^a-zA-Z0-9]/_}
+user=$1
+
+#[client]
+#user=mysqluser
+#password=mysqlpass
+
+if [ ! -f "/home/$user/.my.cnf" ]; then
+	echo "Error: User ${user} .my.cnf does not exist."
+	exit 1
+else
+	chmod 0660 /home/$user/.my.cnf
+	source /home/$user/.my.cnf
+fi
 
 if [ -f /root/.my.cnf ]; then
-    mysql -e "CREATE USER ${USER_NAME}@localhost IDENTIFIED BY '${PASSWDDB}';"
+    mysql -e "CREATE USER ${user}@'%' IDENTIFIED BY '${password}';"
     mysql -e "FLUSH PRIVILEGES;"
 else
-    echo "Please enter root user MySQL password!"
-    echo "Note: password will be hidden when typing"
-    read -sp rootpasswd
-    mysql -uroot -p${rootpasswd} -e "CREATE USER ${USER_NAME}@localhost IDENTIFIED BY '${PASSWDDB}';"
-    mysql -uroot -p${rootpasswd} -e "FLUSH PRIVILEGES;"
+    echo "Error: /root/.my.cnf does not exist."
+	exit 1
 fi
