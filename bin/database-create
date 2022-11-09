@@ -24,6 +24,7 @@ fi
 
 if [ -f /root/.my.cnf ]; then
     mysql -e "CREATE DATABASE ${database} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+	mysql -e "CREATE USER ${user}@'%' IDENTIFIED BY '${password}';"
     mysql -e "GRANT ALL PRIVILEGES ON ${database}.* TO '${user}'@'%';"
     mysql -e "FLUSH PRIVILEGES;"
 else
